@@ -2,10 +2,12 @@ package service
 
 import (
 	"context"
-	"sebsegura/sample-lambda/pkg/logger"
+	"sebsegura/sample-lambda/pkg/client"
 )
 
-type Service struct{}
+type Service struct {
+	client client.Client
+}
 
 type CreditRequest struct {
 	UserID      string `json:"user_uuid"`
@@ -13,12 +15,17 @@ type CreditRequest struct {
 	OperationID string `json:"operation_id"`
 }
 
-func New() *Service {
-	return &Service{}
+func New(client client.Client) *Service {
+	return &Service{
+		client: client,
+	}
 }
 
 func (svc *Service) Credit(ctx context.Context, in *CreditRequest) error {
-	log := logger.Logger(ctx)
-	log.Debug("hello world")
-	return nil
+	_, err := svc.client.GetOperations(ctx, &client.GetOperationsRequest{
+		UserID:      in.UserID,
+		OperationID: in.OperationID,
+	})
+
+	return err
 }
