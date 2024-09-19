@@ -1,0 +1,218 @@
+{
+  "uuid": "4fb22775-81aa-4652-89f3-4d327a8ed606",
+  "lastMigration": 32,
+  "name": "Payment API",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "aef82c32-9ecd-4002-8a92-928887ec862a",
+      "type": "http",
+      "documentation": "Generate an authentication token",
+      "method": "post",
+      "endpoint": "oauth/token",
+      "responses": [
+        {
+          "uuid": "2b642920-c7b0-4ccd-9abe-f20e83b22e08",
+          "body": "{\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Token generated successfully",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "74acd4f4-da50-4310-8d04-637400447ba0",
+          "body": "{\n  \"error\": \"Invalid username or password\"\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Missing or invalid fields",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "4da51e8e-9db5-43e0-af88-22688a7d4ff1",
+      "type": "http",
+      "documentation": "Make a payment",
+      "method": "post",
+      "endpoint": "payments",
+      "responses": [
+        {
+          "uuid": "e4bdd779-a302-48fa-82eb-3ac54f434b19",
+          "body": "{\n  \"id\": \"pay_1234567890abcdef\"\n}",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "Payment processed successfully",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Location",
+              "value": "https://api.example.com/payments/pay_1234567890abcdef"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "11795e6d-3901-488a-98ca-9ee254b195de",
+          "body": "{\n  \"error\": \"Invalid currency or amount\"\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Missing or invalid fields",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "5ebad0ca-30a7-4542-b6b3-43d4d857d577",
+          "body": "{\n  \"error\": \"Invalid or missing token\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "Unauthorized",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "2143a62a-6809-45c2-8d0f-4fac10106edd",
+          "body": "{\n  \"error\": \"An unexpected error occurred\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "Internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "aef82c32-9ecd-4002-8a92-928887ec862a"
+    },
+    {
+      "type": "route",
+      "uuid": "4da51e8e-9db5-43e0-af88-22688a7d4ff1"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [],
+  "callbacks": []
+}
