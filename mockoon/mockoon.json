@@ -1,0 +1,364 @@
+{
+  "uuid": "37d0e497-45ee-4c02-9e61-474a57968b3c",
+  "lastMigration": 32,
+  "name": "Payment API",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "3d47a6c5-f711-4102-aac7-60ed93bd0b33",
+      "type": "http",
+      "documentation": "User authentication",
+      "method": "post",
+      "endpoint": "auth/login",
+      "responses": [
+        {
+          "uuid": "57efa65c-2f3a-4fa4-b597-503fea6d5cb4",
+          "body": "{\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Authentication successful",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "",
+              "value": "",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "d3c37bc5-0133-4748-b4de-5ce390efaaba",
+          "body": "{\n  \"error\": \"Invalid username or password\"\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Invalid username or password",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "username",
+              "value": "",
+              "invert": false,
+              "operator": "null"
+            },
+            {
+              "target": "body",
+              "modifier": "password",
+              "value": "",
+              "invert": false,
+              "operator": "null"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "de8a4a66-ca8a-4302-9b71-fa3044d21d79",
+      "type": "http",
+      "documentation": "Make a payment",
+      "method": "post",
+      "endpoint": "payments",
+      "responses": [
+        {
+          "uuid": "7e7b8791-a561-4daf-bc10-0de0c3be4338",
+          "body": "{\n  \"id\": \"{{data 'transaction' 'data.payment_id' }}\"\n}",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "Payment processed successfully",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "rtvp",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": [
+            {
+              "uuid": "ccd91fbc-01cc-4f58-8a2e-beafa90fc598",
+              "latency": 5
+            }
+          ]
+        },
+        {
+          "uuid": "9e84b469-96c4-476e-b880-1a777cd6e066",
+          "body": "{\n  \"error\": \"Invalid amount or currency\"\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Invalid request payload",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "26b93f88-aea0-4c1e-99df-5062c08da226",
+          "body": "{\n  \"error\": \"Invalid or missing authorization token\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "Unauthorized",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "",
+              "invert": false,
+              "operator": "null"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "307bb64e-2cbf-4451-8670-31f9feafdc3a",
+          "body": "{\n  \"error\": \"An unexpected error occurred\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "Internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "ca6c78a2-39f7-4fa3-8930-680887f57222",
+      "type": "http",
+      "documentation": "List all payments",
+      "method": "get",
+      "endpoint": "payments",
+      "responses": [
+        {
+          "uuid": "ae5a74ac-aca4-4f88-8d7d-8f30fad434fb",
+          "body": "[\n  {\n    \"id\": \"{{data 'transaction' 'data.payment_id'}}\",\n    \"amount\": \"100.00\",\n    \"currency\": \"USD\",\n    \"status\": \"APPROVED\"\n  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "A list of payments",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "789edea1-acfc-4a5a-b804-5f558f999be9",
+          "body": "{\n  \"error\": \"Invalid or missing authorization token\"\n}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "Unauthorized",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "874f7ff6-832b-4adc-b996-ea8c7a022493",
+          "body": "{\n  \"error\": \"An unexpected error occurred\"\n}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "Internal server error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "3d47a6c5-f711-4102-aac7-60ed93bd0b33"
+    },
+    {
+      "type": "route",
+      "uuid": "de8a4a66-ca8a-4302-9b71-fa3044d21d79"
+    },
+    {
+      "type": "route",
+      "uuid": "ca6c78a2-39f7-4fa3-8930-680887f57222"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [
+    {
+      "uuid": "9e635e8d-38bc-4625-a2c8-b9c92362c925",
+      "id": "rtvp",
+      "name": "transaction",
+      "documentation": "",
+      "value": "{\n  \"data\": {\n    \"payment_id\": \"{{guid}}\"\n  }\n}"
+    }
+  ],
+  "callbacks": [
+    {
+      "uuid": "ccd91fbc-01cc-4f58-8a2e-beafa90fc598",
+      "id": "t7bk",
+      "uri": "{{body 'url'}}",
+      "name": "PaymentNotification",
+      "documentation": "",
+      "method": "post",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "bodyType": "INLINE",
+      "body": "{\n  \"id\": \"{{data 'transaction' 'data.payment_id'}}\",\n  \"status\": \"APPROVED\"\n}",
+      "databucketID": "",
+      "filePath": "",
+      "sendFileAsBody": true
+    }
+  ]
+}

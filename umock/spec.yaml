@@ -1,0 +1,119 @@
+openapi: 3.0.1
+info:
+  title: Payment Gateway API
+  version: 1.0.0
+paths:
+  /auth/login:
+    post:
+      summary: User authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Successfull authentication
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    format: jwt
+  /payments:
+    post:
+      summary: Create a new payment
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currency:
+                  type: string
+                amount:
+                  type: number
+                callback_url:
+                  type: string
+              required:
+                - amount
+                - currency
+      responses:
+        '201':
+          description: Payment created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_id:
+                    type: string
+                    format: uuid
+      callbacks:
+        paymentCallback:
+          '{$request.body#/callback_url}':
+            post:
+              summary: Payment status update
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        payment_id:
+                          type: string
+                          format: uuid
+                        status:
+                          type: string
+                          example: APPROVED
+                      required:
+                        - payment_id
+                        - status
+              responses:
+                '200':
+                  description: Callback received
+  /payments/{payment_id}:
+    get:
+      summary: Get payment status
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: payment_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payment status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_id:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
