@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"sebsegura/umock/internal/api"
+	"sebsegura/umock/internal/config"
 )
 
 func main() {
@@ -11,6 +12,8 @@ func main() {
 }
 
 func start() {
+	config.LoadConfig()
+
 	router, err := api.SetupRouter(context.Background(), "spec.yaml")
 	if err != nil {
 		log.Fatalf("cannot setup router: %v", err)

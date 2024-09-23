@@ -2,6 +2,7 @@ package api
 
 import (
 	"bytes"
+	"github.com/Bancar/goala/ulog"
 	"github.com/gin-gonic/gin"
 	"io"
 	"log"
@@ -18,7 +19,7 @@ func LogMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		log.Println("request body:", string(bodyBytes))
+		ulog.With(ulog.Str("request.body", string(bodyBytes))).Debug("")
 
 		c.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
 

@@ -22,7 +22,7 @@ func main() {
 			"message": "ok",
 		})
 	})
-	r.Run() // 8080
+	r.Run(":3000") // 8080
 }
 
 func LogMiddleware() gin.HandlerFunc {

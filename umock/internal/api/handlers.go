@@ -14,8 +14,17 @@ func createHandler(operation *openapi3.Operation, apiRouter routers.Router) gin.
 			return
 		}
 
-		statusCode, response := generateMockResponse(operation)
+		latencyMS, errorRate := getOperationConfig(operation)
 
+		applyLatency(latencyMS)
+
+		// chaos engineering
+		if shouldInjectError(errorRate) {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "injected error"})
+			return
+		}
+
+		statusCode, response := generateMockResponse(operation)
 		c.JSON(statusCode, response)
 
 		if operation.Callbacks != nil {

@@ -6,6 +6,7 @@ paths:
   /auth/login:
     post:
       summary: User authentication
+      x-latency-ms: 500
       requestBody:
         required: true
         content:
@@ -34,6 +35,8 @@ paths:
   /payments:
     post:
       summary: Create a new payment
+      x-latency-ms: 1000
+      x-error-rate: 0.2 # inject errors with a 20% probability
       security:
         - bearerAuth: []
       requestBody:
